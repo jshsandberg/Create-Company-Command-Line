@@ -110,7 +110,7 @@ function runApplication() {
                     break;
 
                     case "Employees?":
-                        inquirer.promot([
+                        inquirer.prompt([
                             {
                                 name: "employeeID",
                                 type: "input",
@@ -147,10 +147,10 @@ function runApplication() {
                                     role_id: response.employeeRoleID,
                                     manager_id: response.employeeManagerID
                                 },
-                                function(err) {
-                                    if (err) throw error;
-                                    console.log(`did it`);
-                                }
+                                // function(err) {
+                                //     if (err) throw error
+                                //     console.log(`did it`);
+                                // }
                             );
                         });
                     break;
@@ -177,7 +177,7 @@ function runApplication() {
                             connection.query(
                                 `SELECT * FROM department`, function(err, result, field) {
                                     if (err) throw error;
-                                    console.log(result)
+                                    console.table(result)
                                 }    
                             ):
                         break; 
@@ -186,7 +186,7 @@ function runApplication() {
                             connection.query(
                                 `SELECT * FROM roles`, function(err, result) {
                                     if (err) throw error;
-                                    console.log(result)
+                                    console.table(result)
                                 }
                             ):
                         break;
@@ -195,12 +195,48 @@ function runApplication() {
                             connection.query(
                                 `SELECT * FROM employee`, function(err, result) {
                                     if (err) throw error;
-                                    console.log(result)
+                                    console.table(result)
                                 }
                             ):
                         break;
                     }
                 }):
+            break;
+
+            case "Update employee roles",
+                connection.query(
+                    'SELECT * FROM employee', function (err, results) {
+                        if (err) throw err;
+                            inquirer.prompt(
+                                {
+                                    name: "choice",
+                                    type: "rawlist",
+                                    choices: function() {
+                                        var choiceArray = [];
+                                        for (var i = 0; i < results.length; i++) {
+                                          choiceArray.push(results[i].first_name);
+                                        }
+                                        return choiceArray;
+                                      },
+                                    message: "Who would you like to update their role ID?",
+
+        
+                                }
+                            )
+                            .then(response => {
+                                var chosenItem;
+                                for (var i = 0; i < results.length; i++) {
+                                  if (results[i].first_name === response.choice) {
+                                    chosenItem = results[i];
+                                  }
+                                console.log(choseItem);
+                            }
+                        })
+                    }
+                    
+                ):
+                
+
             break;
 
         }
